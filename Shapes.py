@@ -40,8 +40,20 @@ class Torus(Shape3D):
         self.major_radius = major_radius
         self.minor_radius = minor_radius
 
-    def draw(self):
-            pass
+    def draw(self, ax):
+        u = np.linspace(0, 2 * math.pi, 100)
+        v = np.linspace(0, 2 * math.pi, 50)
+
+        u, v = np.meshgrid(u, v)
+
+        x = (self.major_radius + self.minor_radius * np.cos(v)) * np.cos(u)
+        y = (self.major_radius + self.minor_radius * np.cos(v)) * np.sin(u)
+        z = self.minor_radius * np.sin(v)
+
+        ax.plot_surface(x, y, z, color=self.colour)
+
+        ax.set_box_aspect((1, 1, 1))
+        pass
 
     def volume(self):
         return (math.pi * self.minor_radius ** 2) * (2 * math.pi * self.major_radius)
