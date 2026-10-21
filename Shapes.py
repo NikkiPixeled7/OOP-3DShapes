@@ -1,4 +1,11 @@
 import math
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = []
+y = []
+z = []
+
 class Shape3D:
     def __init__(self, type, colour):
         self.type = type
