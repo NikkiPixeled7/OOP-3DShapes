@@ -78,7 +78,24 @@ class Oloid(Shape3D):
         super().__init__("Oloid", colour)
         self.radius = radius
 
-    def draw(self):
+    def draw(self, ax):
+            r = self.radius
+
+            s = np.linspace(0, 2 * np.pi, 100)
+            t = np.linspace(math.pi / 3, 5 * math.pi / 3, 120)
+
+            S, T = np.meshgrid(s, t)
+
+            X = r * (S / (1 - np.cos(T)) + (1 - S) * np.cos(T))
+            Y = r * (1-S) * np.sin(T)
+            Z = r * S * np.sqrt(np.maximum(0, 1 - 2 * np.cos(T)) / (1 - np.cos(T)))
+
+            ax.plot_surface(X, Y, Z, color=self.colour)
+
+            ax.plot_surface(X, Y, -Z, color=self.colour)
+
+            ax.set_box_aspect((1, 1, 1))
+
             pass
 
     def volume(self):
