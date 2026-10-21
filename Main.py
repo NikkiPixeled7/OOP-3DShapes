@@ -25,10 +25,10 @@ for shape in shapes:
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-sec_shape.draw(ax)
+first_shape.draw(ax)
 
 
-ax.set_title("3D Shape: " + sec_shape.get_type())
+ax.set_title("3D Shape: " + first_shape.get_type())
 ax.set_xlabel('X-axis')
 ax.set_ylabel('Y-axis')
 ax.set_zlabel('Z-axis')
