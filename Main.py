@@ -6,22 +6,29 @@ import tkinter as tk
 window = tk.Tk()
 window.title("3D Shape Viewer")
 window.geometry("400x300")
-window.configure(bg="lightpurple")
+window.configure(bg="Purple")
 window.resizable(False, False)
 
 first_shape = Torus("Torus", "Purple", 5, 1)
+sec_shape = Oloid("Oloid", "Purple", 3)
+third_shape = Rhombicosidodecahedron("Rhombicosidodecahedron", "Pink", 2)
+shapes = [first_shape, sec_shape, third_shape]
 
-print("Shape type: ", first_shape.get_type())
-print("Shape colour: ", first_shape.get_col())
-print("Shape volume: ", first_shape.volume())
-print("Shape surface area: ", first_shape.surface_area())
+
+for shape in shapes:
+    print("Shape type: ", shape.get_type())
+    print("Shape colour: ", shape.get_col())
+    print("Shape volume: ", shape.volume())
+    print("Shape surface area: ", shape.surface_area())
+    print("-----------------------------")
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-first_shape.draw(ax)
+sec_shape.draw(ax)
 
-ax.set_title("3D Shape: " + first_shape.get_type())
+
+ax.set_title("3D Shape: " + sec_shape.get_type())
 ax.set_xlabel('X-axis')
 ax.set_ylabel('Y-axis')
 ax.set_zlabel('Z-axis')
