@@ -78,25 +78,47 @@ class Oloid(Shape3D):
         super().__init__("Oloid", colour)
         self.radius = radius
 
+    
+    
     def draw(self, ax):
-            r = self.radius
+        from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-            s = np.linspace(0, 2 * np.pi, 100)
-            t = np.linspace(math.pi / 3, 5 * math.pi / 3, 120)
+        r = self.radius
 
-            S, T = np.meshgrid(s, t)
+        t = np.linspace(0, 2 * math.pi, 100, endpoint=False)
 
-            X = r * (S / (1 - np.cos(T)) + (1 - S) * np.cos(T))
-            Y = r * (1-S) * np.sin(T)
-            Z = r * S * np.sqrt(np.maximum(0, 1 - 2 * np.cos(T)) / (1 - np.cos(T)))
+        circle1 = np.column_stack((
+            r * (1 + np.cos(t)),
+            r * np.sin(t),
+            np.zeros_like(t)
+        ))
 
-            ax.plot_surface(X, Y, Z, color=self.colour)
+        circle2 = np.column_stack((
+            r * np.ones_like(t),
+            np.zeros_like(t),
+            r * np.sin(t)
+        ))
 
-            ax.plot_surface(X, Y, -Z, color=self.colour)
+        points = np.vstack((circle1, circle2))
 
-            ax.set_box_aspect((1, 1, 1))
+        from scipy.spatial import ConvexHull
+        hull = ConvexHull(points)
 
-            pass
+        triangles = points[hull.simplices]
+
+        surface = Poly3DCollection(
+            triangles,
+            facecolor=self.colour,
+            edgecolor=self.colour,
+            alpha=1.0
+        )
+
+        ax.add_collection3d(surface)
+
+        ax.set_xlim(0, 2 * r)
+        ax.set_ylim(-r, r)
+        ax.set_zlim(-r, r)
+        ax.set_box_aspect((2, 1, 1))
 
     def volume(self):
         return 3.0524185 * self.radius ** 3 # approximately cause the 3.05 is not exact
@@ -110,9 +132,9 @@ class Oloid(Shape3D):
     def set_radius(self, new_radius):
         self.radius = new_radius
 
-class Rhombicosidodecahedron(Shape3D):
+class Square(Shape3D):
     def __init__(self, type, colour, edge_length):
-        super().__init__("Rhombicosidodecahedron", colour)
+        super().__init__("Square", colour)
         self.edge = edge_length
 
     def draw(self):
