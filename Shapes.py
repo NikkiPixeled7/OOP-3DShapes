@@ -73,81 +73,115 @@ class Torus(Shape3D):
     def set_minor_radius(self, new_minor_radius):
             self.minor_radius = new_minor_radius
 
+
 class Oloid(Shape3D):
     def __init__(self, type, colour, radius):
         super().__init__("Oloid", colour)
         self.radius = radius
 
-    
-    
     def draw(self, ax):
         from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+        from scipy.spatial import ConvexHull
 
         r = self.radius
-
-        t = np.linspace(0, 2 * math.pi, 100, endpoint=False)
+        t = np.linspace(0, 2 * math.pi, 200, endpoint=False)
 
         circle1 = np.column_stack((
-            r * (1 + np.cos(t)),
+            r * np.cos(t),
             r * np.sin(t),
             np.zeros_like(t)
         ))
 
         circle2 = np.column_stack((
-            r * np.ones_like(t),
-            np.zeros_like(t),
+            -r * np.ones_like(t),
+            r * np.cos(t),
             r * np.sin(t)
         ))
 
         points = np.vstack((circle1, circle2))
 
-        from scipy.spatial import ConvexHull
         hull = ConvexHull(points)
-
         triangles = points[hull.simplices]
 
         surface = Poly3DCollection(
             triangles,
-            facecolor=self.colour,
-            edgecolor=self.colour,
+            facecolors=self.colour,
+            edgecolors=self.colour,
+            linewidths=0.1,
             alpha=1.0
         )
 
         ax.add_collection3d(surface)
 
-        ax.set_xlim(0, 2 * r)
+        ax.set_xlim(-r, 2 * r)
         ax.set_ylim(-r, r)
         ax.set_zlim(-r, r)
-        ax.set_box_aspect((2, 1, 1))
+        ax.set_box_aspect((3, 2, 2))
 
     def volume(self):
-        return 3.0524185 * self.radius ** 3 # approximately cause the 3.05 is not exact
+        return 3.0524185 * self.radius ** 3
 
     def surface_area(self):
         return 4 * math.pi * self.radius ** 2
 
     def get_radius(self):
-            return self.radius
-        
+        return self.radius
+
     def set_radius(self, new_radius):
         self.radius = new_radius
 
-class Square(Shape3D):
+class Cube(Shape3D):
     def __init__(self, type, colour, edge_length):
-        super().__init__("Square", colour)
+        super().__init__("Cube", colour)
         self.edge = edge_length
 
-    def draw(self):
-        pass
+    def draw(self, ax):
+        from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
+        r = self.edge / 2
+
+        points = np.array([
+            [-r, -r, -r],
+            [ r, -r, -r],
+            [ r,  r, -r],
+            [-r,  r, -r],
+            [-r, -r,  r],
+            [ r, -r,  r],
+            [ r,  r,  r],
+            [-r,  r,  r]
+        ])
+
+        faces = [
+            [0, 1, 2, 3],
+            [4, 5, 6, 7],
+            [0, 1, 5, 4],
+            [2, 3, 7, 6],
+            [1, 2, 6, 5],
+            [0, 3, 7, 4]
+        ]
+
+        surface = Poly3DCollection(
+            [points[face] for face in faces],
+            facecolors=self.colour,
+            edgecolors="black",
+            linewidths=1
+        )
+
+        ax.add_collection3d(surface)
+
+        ax.set_xlim(-r, r)
+        ax.set_ylim(-r, r)
+        ax.set_zlim(-r, r)
+        ax.set_box_aspect((1, 1, 1))
 
     def volume(self):
-        return ((60 + 29 * math.sqrt(5)) / 3) * (self.edge ** 3)
+        return self.edge ** 3
 
     def surface_area(self):
-        return (30 + 5 * math.sqrt(3) + 3 * math.sqrt(25 + 10 * math.sqrt(5))) * self.edge ** 2
+        return 6 * (self.edge ** 2)
 
     def get_edge_length(self):
         return self.edge
-    
+
     def set_edge_length(self, new_edge_length):
         self.edge = new_edge_length
