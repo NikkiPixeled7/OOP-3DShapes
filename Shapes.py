@@ -56,10 +56,14 @@ class Torus(Shape3D):
         pass
 
     def volume(self):
-        return (math.pi * self.minor_radius ** 2) * (2 * math.pi * self.major_radius)
+        volume = (math.pi * self.minor_radius ** 2) * (2 * math.pi * self.major_radius)
+        volume = round(volume, 2)
+        return volume
 
     def surface_area(self):
-        return 4 * (math.pi)**2 * self.major_radius * self.minor_radius
+        surface_area = 4 * (math.pi)**2 * self.major_radius * self.minor_radius
+        surface_area = round(surface_area, 2)
+        return surface_area
 
     def get_major_radius(self):
                 return self.major_radius
@@ -74,61 +78,70 @@ class Torus(Shape3D):
             self.minor_radius = new_minor_radius
 
 
-class Oloid(Shape3D):
-    def __init__(self, type, colour, radius):
-        super().__init__("Oloid", colour)
-        self.radius = radius
+class Icosahedron(Shape3D):
+    def __init__(self, type, colour, side_length):
+        super().__init__("Icosahedron", colour)
+        self.side_length = side_length
 
     def draw(self, ax):
         from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
+        phi = (1 + math.sqrt(5)) / 2
+        r = self.side_length
+
+        vertices = np.array([
+            [-1,  phi,  0],
+            [ 1,  phi,  0],
+            [-1, -phi,  0],
+            [ 1, -phi,  0],
+            [ 0, -1,  phi],
+            [ 0,  1,  phi],
+            [ 0, -1, -phi],
+            [ 0,  1, -phi],
+            [ phi,  0, -1],
+            [ phi,  0,  1],
+            [-phi,  0, -1],
+            [-phi,  0,  1]
+        ], dtype=float)
+
+        vertices = vertices / np.linalg.norm(vertices[0]) * r
+
         from scipy.spatial import ConvexHull
+        hull = ConvexHull(vertices)
 
-        r = self.radius
-        t = np.linspace(0, 2 * math.pi, 200, endpoint=False)
-
-        circle1 = np.column_stack((
-            r * np.cos(t),
-            r * np.sin(t),
-            np.zeros_like(t)
-        ))
-
-        circle2 = np.column_stack((
-            -r * np.ones_like(t),
-            r * np.cos(t),
-            r * np.sin(t)
-        ))
-
-        points = np.vstack((circle1, circle2))
-
-        hull = ConvexHull(points)
-        triangles = points[hull.simplices]
+        faces = vertices[hull.simplices]
 
         surface = Poly3DCollection(
-            triangles,
+            faces,
             facecolors=self.colour,
-            edgecolors=self.colour,
-            linewidths=0.1,
+            edgecolors="black",
+            linewidths=0.8,
             alpha=1.0
         )
 
         ax.add_collection3d(surface)
 
-        ax.set_xlim(-r, 2 * r)
+        ax.set_xlim(-r, r)
         ax.set_ylim(-r, r)
         ax.set_zlim(-r, r)
-        ax.set_box_aspect((3, 2, 2))
+        ax.set_box_aspect((1, 1, 1))
 
     def volume(self):
-        return 3.0524185 * self.radius ** 3
-
+        volume = ((5 * (3 + math.sqrt(5))) / 12) * (self.side_length ** 3)
+        # the constant is 2.1816949906249123 which is more efficient but like this is cooler ^
+        volume = round(volume, 2)
+        return volume
+    
     def surface_area(self):
-        return 4 * math.pi * self.radius ** 2
+        surface_area = 5 * math.sqrt(3) * (self.side_length ** 2)
+        surface_area = round(surface_area, 2)
+        return surface_area
 
-    def get_radius(self):
-        return self.radius
+    def get_side_length(self):
+        return self.side_length
 
-    def set_radius(self, new_radius):
-        self.radius = new_radius
+    def set_side_length(self, new_side_length):
+        self.side_length = new_side_length
 
 class Cube(Shape3D):
     def __init__(self, type, colour, edge_length):
@@ -175,10 +188,14 @@ class Cube(Shape3D):
         ax.set_box_aspect((1, 1, 1))
 
     def volume(self):
-        return self.edge ** 3
+        volume = self.edge ** 3
+        volume = round(volume, 2)
+        return volume
 
     def surface_area(self):
-        return 6 * (self.edge ** 2)
+        surface_area = 6 * (self.edge ** 2)
+        surface_area = round(surface_area, 2)
+        return surface_area
 
     def get_edge_length(self):
         return self.edge
