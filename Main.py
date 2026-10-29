@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from Shapes import Torus, Icosahedron, Cube
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
 def center_window(window, width, height):
 
@@ -105,7 +105,13 @@ def homescreen():
     window.resizable(False, False)
 
     welcome_label = tk.Label(window, text="Choose A Shape:", font=("Times New Roman", 20, "bold"), bg="#B48AEB")
-    welcome_label.pack(pady=20)
+    welcome_label.pack(pady=2)
+
+    instructions_text = tk.Label(window, text="*Drag Right-Click to Zoom*\n*Drag Middle-Click to Move*", font=("Times New Roman", 12), bg="#B48AEB")
+    instructions_text.pack()
+
+    seperator_frame = tk.Frame(window, bg="#A06AE7", height=1).pack(fill="x", pady=1)
+    seperator_frame1 = tk.Frame(window, bg="#A06AE7", height=1).pack(fill="x", pady=1)
 
     torus_button = tk.Button(window, text="Click for Torus", command=spawn_torus)
     torus_button.pack(pady=10, padx=35)
@@ -122,8 +128,8 @@ def homescreen():
     submit_btn_t = tk.Button(window, text="Submit", command=torus_values)
     submit_btn_t.pack(pady=10)
 
-    # pad_frame = tk.Frame(window, height=20, bg="#B48AEB")
-    # pad_frame.pack(pady=1)
+    seperator_frame2 = tk.Frame(window, bg="#A06AE7", height=1).pack(fill="x", pady=1)
+    seperator_frame21 = tk.Frame(window, bg="#A06AE7", height=1).pack(fill="x", pady=1)
 
     Icosahedron_button = tk.Button(window, text="Click for Icosahedron", command=spawn_Icosahedron)
     Icosahedron_button.pack(pady=10, padx=35)
@@ -137,8 +143,8 @@ def homescreen():
     submit_btn_o = tk.Button(window, text="Submit", command=Icosahedron_values)
     submit_btn_o.pack(pady=10)
 
-    # pad_frame2 = tk.Frame(window, height=20, bg="#B48AEB")
-    # pad_frame2.pack(pady=1)
+    seperator_frame3 = tk.Frame(window, bg="#A06AE7", height=1).pack(fill="x", pady=1)
+    seperator_frame31 = tk.Frame(window, bg="#A06AE7", height=1).pack(fill="x", pady=1)
 
     cube_button = tk.Button(window, text="Click for Cube", command=spawn_cube)
     cube_button.pack(pady=10, padx=35)
