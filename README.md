@@ -2,3 +2,4 @@
 
 Install:
     - pip install matplotlib
+    - pip install webcolors
