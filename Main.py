@@ -3,6 +3,7 @@ import numpy as np
 from Shapes import Torus, Icosahedron, Cube
 import tkinter as tk
 from tkinter import messagebox
+import webcolors
 
 torus_col = ""
 icosahedron_col = ""
@@ -28,6 +29,13 @@ for shape in shapes:
     print("Shape volume: ", shape.volume())
     print("Shape surface area: ", shape.surface_area())
     print("-----------------------------")
+
+def is_valid_color_name(color_name):
+    try:
+        webcolors.name_to_hex(color_name)
+        return True
+    except ValueError:
+        return False
 
 def spawn_torus():
     fig = plt.figure()
@@ -80,13 +88,16 @@ def homescreen():
             minor_radius = float(entry_t2.get())
             color = str(entry_tc.get())
             torus_col = color
-            first_shape.set_major_radius(major_radius)
-            first_shape.set_minor_radius(minor_radius)
-            first_shape.set_col(color)
-            torus_col_label.config(text=f"Current Color: {torus_col}")
-            print("Torus values updated: Major Radius =", major_radius, ", Minor Radius =", minor_radius, ", Color =", color)
-            text = f"Surface Area: {first_shape.surface_area()}\nVolume: {first_shape.volume()}"
-            messagebox.showinfo("Values Submitted.", text)
+            if is_valid_color_name(color):
+                first_shape.set_major_radius(major_radius)
+                first_shape.set_minor_radius(minor_radius)
+                first_shape.set_col(color)
+                torus_col_label.config(text=f"Current Color: {torus_col}")
+                print("Torus values updated: Major Radius =", major_radius, ", Minor Radius =", minor_radius, ", Color =", color)
+                text = f"Surface Area: {first_shape.surface_area()}\nVolume: {first_shape.volume()}\nColor: {torus_col}"
+                messagebox.showinfo("Values Submitted.", text)
+            else:
+                messagebox.showerror("Error!", "Invalid Color Name")
         except ValueError:
             error_text = f"Incorrect Value Types Entered.\n*Radii must be Float type, Color must be Str type*"
             messagebox.showerror("Error!", error_text)
@@ -98,30 +109,36 @@ def homescreen():
             side_length = float(entry_o.get())
             color = str(entry_oc.get())
             icosahedron_col = color
-            sec_shape.set_side_length(side_length)
-            sec_shape.set_col(color)
-            ico_col_label.config(text=f"Current Color: {icosahedron_col}")
-            print("Icosahedron values updated: Radius =", side_length, ", Color =", color)
-            text = f"Surface Area: {sec_shape.surface_area()}\nVolume: {sec_shape.volume()}"
-            messagebox.showinfo("Values Submitted.", text)
+            if is_valid_color_name(color):
+                sec_shape.set_side_length(side_length)
+                sec_shape.set_col(color)
+                ico_col_label.config(text=f"Current Color: {icosahedron_col}")
+                print("Icosahedron values updated: Radius =", side_length, ", Color =", color)
+                text = f"Surface Area: {sec_shape.surface_area()}\nVolume: {sec_shape.volume()}\nColor: {icosahedron_col}"
+                messagebox.showinfo("Values Submitted.", text)
+            else:
+                messagebox.showerror("Error!", "Invalid Color Name")
         except ValueError:
-            error_text = f"Incorrect Value Types Entered.\n*Radii must be Float type, Color must be Str type*"
+            error_text = f"Incorrect Value Types Entered.\n*Side Length must be Float type, Color must be Str type*"
             messagebox.showerror("Error!", error_text)
 
     def cube_values():
         global cube_col
         try:
-            side_length = float(entry_c.get())
+            edge_length = float(entry_c.get())
             color = str(entry_cc.get())
-            cube_col = color    
-            third_shape.set_side_length(side_length)
-            third_shape.set_col(color)
-            cube_col_label.config(text=f"Current Color: {cube_col}")
-            print("Cube values updated: Edge Length =", side_length, ", Color =", color)
-            text = f"Surface Area: {third_shape.surface_area()}\nVolume: {third_shape.volume()}"
-            messagebox.showinfo("Values Submitted.", text)
+            cube_col = color
+            if is_valid_color_name(color):
+                third_shape.set_edge_length(edge_length)
+                third_shape.set_col(color)
+                cube_col_label.config(text=f"Current Color: {cube_col}")
+                print("Cube values updated: Edge Length =", edge_length, ", Color =", color)
+                text = f"Surface Area: {third_shape.surface_area()}\nVolume: {third_shape.volume()}\nColor: {cube_col}"
+                messagebox.showinfo("Values Submitted.", text)
+            else:
+                messagebox.showerror("Error!", "Invalid Color Name")
         except ValueError:
-            error_text = f"Incorrect Value Types Entered.\n*Radii must be Float type, Color must be Str type*"
+            error_text = f"Incorrect Value Types Entered.\n*Side Length must be Float type, Color must be Str type*"
             messagebox.showerror("Error!", error_text)
 
     window = tk.Tk()
