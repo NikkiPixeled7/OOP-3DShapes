@@ -1,4 +1,4 @@
-# OOP-3DShapes-Torus-Oloid
+# OOP-3DShapes-Torus-Icosahedron-Cube
 
 Install:
     - pip install matplotlib
